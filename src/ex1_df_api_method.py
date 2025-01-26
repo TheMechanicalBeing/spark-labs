@@ -32,12 +32,16 @@ def main():
     logger.info("Movies DataFrame loaded!")
     logger.info("DataFrames loaded!")
 
+    logger.info("Starting transformations!")
+
     ratings_with_year_and_counts_df = ratings_df.select("movieId", "timestamp") \
         .withColumn('timestamp', f.from_unixtime(f.col('timestamp'))) \
         .withColumn('year', f.year(f.col('timestamp'))) \
         .drop("timestamp") \
         .groupBy("year", "movieId").agg(f.count(f.col("movieId")).alias("count")) \
         .alias("ratings_with_year_and_counts_df")
+
+    logger.info("Calculated rating counts by movie and year.")
 
     ratings_max_counts_by_year_df = ratings_with_year_and_counts_df.groupBy("year").agg(f.max(f.col("count")).alias("count"))
 
@@ -57,6 +61,8 @@ def main():
             f.col('ratings_with_year_and_counts_df.count'),
         ).alias("ratings_df")
 
+    logger.info("Filtered max counts by year")
+
     result_df = movies_df.join(
             ratings_df,
             'movieId',
@@ -68,9 +74,15 @@ def main():
             f.col("ratings_df.count").alias("Total Rates"),
         ).orderBy("year")
 
+    logger.info("Finished transformations!")
+
     result_df.show(100, truncate=False)
 
+    logger.info("Results shown")
+
     spark.stop()
+
+    logger.info("SparkSession stopped")
 
 
 if __name__ == "__main__":
