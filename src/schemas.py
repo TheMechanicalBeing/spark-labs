@@ -10,7 +10,7 @@ from pyspark.sql.types import (
 MOVIE_SCHEMA = StructType([
     StructField('movieId', LongType()),
     StructField('title', StringType()),
-    StructField('genres', ArrayType(StringType())),
+    StructField('genres', StringType()),
 ])
 
 LINK_SCHEMA = StructType([
