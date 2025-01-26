@@ -1,5 +1,6 @@
-from pyspark.sql import SparkSession, functions as f
 import logging
+
+from pyspark.sql import SparkSession, functions as f
 
 from src.schemas import RATING_SCHEMA, MOVIE_SCHEMA
 
